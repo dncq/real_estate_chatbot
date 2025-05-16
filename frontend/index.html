@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Real Estate Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .chat-container {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 400px;
+      max-width: 95vw;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    .chat-window {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      margin-bottom: 15px;
+      background: #fafafa;
+      font-size: 15px;
+    }
+    .chat-message {
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+    .user {
+      align-self: flex-end;
+      background: #e6f7ff;
+      color: #005a9e;
+      padding: 8px 12px;
+      border-radius: 16px 16px 0 16px;
+      max-width: 80%;
+      margin-left: auto;
+    }
+    .bot {
+      align-self: flex-start;
+      background: #f0f0f0;
+      color: #333;
+      padding: 8px 12px;
+      border-radius: 16px 16px 16px 0;
+      max-width: 80%;
+      margin-right: auto;
+    }
+    .input-row {
+      display: flex;
+      gap: 8px;
+    }
+    #question {
+      flex: 1;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+    button {
+      padding: 8px 16px;
+      border-radius: 4px;
+      border: none;
+      background: #0078d4;
+      color: #fff;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #005a9e;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <h2 style="text-align:center; margin-top:0;">Real Estate Chatbot</h2>
+    <div id="chat-window" class="chat-window"></div>
+    <div class="input-row">
+      <input type="text" id="question" placeholder="Chào bạn! Bạn cần giúp đỡ gì ạ?" autocomplete="off">
+      <button onclick="askBot()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const chatWindow = document.getElementById("chat-window");
+    const questionInput = document.getElementById("question");
+
+    function appendMessage(text, sender) {
+      const msgDiv = document.createElement("div");
+      msgDiv.className = "chat-message";
+      const bubble = document.createElement("div");
+      bubble.className = sender;
+
+      // Format: chuyển các dòng bắt đầu bằng - hoặc • thành <li>
+      if (sender === "bot") {
+        // Tách các dòng
+        const lines = text.split('\n').filter(line => line.trim() !== "");
+        // Nếu có nhiều dòng bắt đầu bằng dấu gạch đầu dòng, chuyển thành danh sách
+        if (lines.some(line => /^(\s*[-•*])\s+/.test(line))) {
+          let html = "<ul style='padding-left:18px; margin:0'>";
+          lines.forEach(line => {
+            const match = line.match(/^(\s*[-•*])\s+(.*)/);
+            if (match) {
+              html += `<li>${match[2]}</li>`;
+            } else {
+              html += `<div>${line}</div>`;
+            }
+          });
+          html += "</ul>";
+          bubble.innerHTML = html;
+        } else {
+          // Nếu không phải dạng gạch đầu dòng, chỉ xuống dòng bình thường
+          bubble.innerHTML = text.replace(/\n/g, "<br>");
+        }
+      } else {
+        bubble.textContent = text;
+      }
+
+      msgDiv.appendChild(bubble);
+      chatWindow.appendChild(msgDiv);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+    // ...existing code...
+
+    async function askBot() {
+      const question = questionInput.value.trim();
+      if (!question) return;
+      appendMessage(question, "user");
+      questionInput.value = "";
+      questionInput.disabled = true;
+
+      try {
+        // const res = await fetch("http://localhost:8000/ask", {
+        const res = await fetch("/ask", {
+
+          method: "POST",
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_question: question })
+        });
+        const data = await res.json();
+        appendMessage(data.response, "bot");
+      } catch (e) {
+        appendMessage("Sorry, there was an error connecting to the server.", "bot");
+      } finally {
+        questionInput.disabled = false;
+        questionInput.focus();
+      }
+    }
+
+    // Allow pressing Enter to send
+    questionInput.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        askBot();
+      }
+    });
+  </script>
+</body>
+</html>
