@@ -37,7 +37,7 @@ Chatbot hỗ trợ tư vấn và định giá bất động sản, sử dụng F
 
 1. **Cài đặt ngrok**
 2. **Chạy ngrok sau khi chay backend:**
-   ```bash
+   ```sh
    ngrok http 8000
 
-3. **Copy link forwarding**
+3. **Copy link forwarding  và chia sẻ với người dùng**
