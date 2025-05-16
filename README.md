@@ -13,7 +13,7 @@ Chatbot hỗ trợ tư vấn và định giá bất động sản, sử dụng F
 
 1. **Clone repo:**
    ```bash
-   git clone https://github.com/your-username/real_estate_chatbot.git
+   git clone https://github.com/dncq/real_estate_chatbot.git
    cd real_estate_chatbot
 
 2. **Cài đặt các thư viện:**
