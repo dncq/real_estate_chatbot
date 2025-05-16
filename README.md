@@ -31,8 +31,7 @@ Chatbot hỗ trợ tư vấn và định giá bất động sản, sử dụng F
     ```baah
    cd backend
    uvicorn main:app --host 0.0.0.0 --port 8000
-
-2. **Chay file** index.html trong thu muc frontend **để mở giao diện**
+2. **Chạy file** `frontend/index.html` **bằng trình duyệt để sử dụng giao diện chatbot.**
 
 ## Chia sẻ public với ngrok (tùy chọn)
 
