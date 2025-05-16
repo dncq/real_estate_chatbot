@@ -35,7 +35,7 @@ Chatbot hỗ trợ tư vấn và định giá bất động sản, sử dụng F
 
 ## Chia sẻ public với ngrok (tùy chọn)
 
-1. **Cài đặt ngrok**
+1. **Cài đặt ngrok** [Download ngrok](https://ngrok.com/downloads/windows?tab=download)
 2. **Chạy ngrok sau khi chay backend:**
    ```sh
    ngrok http 8000
