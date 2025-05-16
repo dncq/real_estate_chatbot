@@ -13,18 +13,22 @@ load_dotenv()
 
 app = FastAPI()
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+INDEX_HTML = os.path.join(FRONTEND_DIR, "index.html")
+
 # Serve static HTML
-app.mount("/frontend", StaticFiles(directory=r"D:\Tài liệu\2024.2\Sotatek\real_estate_chatbot\frontend"), name="frontend")
+app.mount("/frontend", StaticFiles(directory=FRONTEND_DIR), name="frontend")
 
 # Route "/" trả về file index.html
 @app.get("/")
 def serve_frontend():
-    return FileResponse(r"D:\Tài liệu\2024.2\Sotatek\real_estate_chatbot\frontend\index.html")
+    return FileResponse(INDEX_HTML)
 
 @app.get("/favicon.ico")
 def favicon():
     # Nếu bạn có file favicon.ico thật, hãy trả về đường dẫn thật
-    favicon_path = r"D:\Tài liệu\2024.2\Sotatek\real_estate_chatbot\frontend\favicon.ico"
+    favicon_path = r"\real_estate_chatbot\frontend\favicon.ico"
     if os.path.exists(favicon_path):
         return FileResponse(favicon_path)
     # Nếu không có, trả về response rỗng
